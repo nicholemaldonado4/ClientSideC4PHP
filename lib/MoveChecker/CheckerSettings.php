@@ -1,8 +1,13 @@
 <?php
+// Nichole Maldonado
+// Extra Credit - CheckerSettings.php
+// Oct 20, 2020
+// Dr. Cheon, CS3360
+
 require_once dirname(__DIR__)."/Game/Player.php";
 
 /*
- * Stores a blockRequest and reply and the piece color
+ * Stores a blockRequest and reply and the Player
  * to place in the board.
  */
 class CheckerSettings {
@@ -11,9 +16,9 @@ class CheckerSettings {
     private bool $blockReply;
 
     /*
-     * Constructor that stores the $blockRequest, $blockReply, and $pieceColor.
+     * Constructor that stores the $blockRequest, $blockReply, and $player.
      * @param: Whether or not we are requesting to see if a move will be blocking,
-     *         the reply of this request, and piece color of the piece.
+     *         the reply of this request, and the $player.
      * @return: None.
      */
     public function __construct($blockRequest, $blockReply, $player) {
@@ -50,7 +55,7 @@ class CheckerSettings {
     }
 
     /*
-     * Getter for the field $blockRequest.
+     * Getter for the field $blockReply.
      * @param: None
      * @return: The boolean value of $blockReply.
      */
@@ -59,9 +64,9 @@ class CheckerSettings {
     }
 
     /*
-     * Getter for the field $pieceColor.
+     * Getter for the field $player.
      * @param: None
-     * @return: The PieceColor assigned to $pieceColor.
+     * @return: The $player.
      */
     public function getPlayer() {
         return $this->player;

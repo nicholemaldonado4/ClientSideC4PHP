@@ -1,9 +1,8 @@
 <?php
 // Nichole Maldonado
-// Lab 1 - MoveRecords
-// September 18, 2020
+// Extra Credit - MoveRecords.php
+// Oct 20, 2020
 // Dr. Cheon, CS3360
-// Keeps records for block move, no win move, and default move.
 
 require_once __DIR__."/Record.php";
 
@@ -103,6 +102,12 @@ class MoveRecords {
         return $this->records[$index]->getCol();
     }
 
+    /*
+     * Gets user-readable representation of the record.
+     * Assumes that the record has already been populated with a column.
+     * @parm: The index of the record - either 0, 1, or 2.
+     * @return: The human-readable description of the record.
+     */
     function recordDescription($index) {
         $description = null;
         switch ($index) {

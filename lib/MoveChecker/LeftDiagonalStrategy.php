@@ -1,9 +1,8 @@
 <?php
 // Nichole Maldonado
-// Lab 1 - LeftDiagonalStrategy
-// September 7, 2020
+// Extra Credit - LeftDiagonalStrategy.php
+// Oct 20, 2020
 // Dr. Cheon, CS3360
-// Keeps track of two points and moves the points in a left diagonal motion.
 
 require_once __DIR__."/HorizontalStrategy.php";
 require_once __DIR__."/ResetPoint.php";

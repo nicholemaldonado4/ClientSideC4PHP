@@ -1,9 +1,8 @@
 <?php
 // Nichole Maldonado
-// Lab 1 - LeftDiagonalStrategy
-// September 7, 2020
+// Extra Credit - RightDiagonalStrategy.php
+// Oct 20, 2020
 // Dr. Cheon, CS3360
-// Keeps track of two points and moves the points in a right diagonal motion.
 
 require_once __DIR__."/HorizontalStrategy.php";
 require_once __DIR__."/ResetPoint.php";
@@ -31,7 +30,7 @@ class RightDiagonalStrategy extends HorizontalStrategy {
      * Set all boundaries of the board and create the points. Since we are
      * moving to the right diagonally, the left point goes up in the board and
      * the right point starts lower in the board.
-     * @param: The column and row of the piece to insert.
+     * @param: The $col and $row of the piece to insert. The $width and $height of the board.
      * @return: None.
      */
     function __construct($col, $row, $width, $height) {

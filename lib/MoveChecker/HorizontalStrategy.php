@@ -1,9 +1,8 @@
 <?php
 // Nichole Maldonado
-// Lab 1 - HorizontalStrategy
-// September 7, 2020
+// Extra Credit - HorizontalStrategy.php
+// Oct 20, 2020
 // Dr. Cheon, CS3360
-// Keeps track of two points and moves the points horizontally within the board's range.
 
 /*
  * HorizontalStrategy has two points and moves the points horizontally.
@@ -36,23 +35,13 @@ class HorizontalStrategy {
     /*
      * Set the left and right boundary of the board. Set pt1 to the left of the column
      * and pt2 to the right of the col.
-     * @param: The column and row of the piece to insert.
+     * @param: The column and row of the piece to insert. The width of the board.
      * @return: None
      */
     function __construct($col, $row, $width) {
         $this->leftBoundary = max($col - 3, 0);
         $this->rightBoundary = min($col + 3, $width - 1);
         $this->setPoints($col, $row);
-    }
-
-    /*
-     * Gets the starting point if the move will leave to a winning
-     * move.
-     * @param: None.
-     * @return the x position (col) of the starting point.
-     */
-    public function getWinningStart() {
-        return $this->pt1["x"] + 1;
     }
 
     /*
@@ -111,31 +100,31 @@ class HorizontalStrategy {
     }
 
     /*
-     * Get the game's color at pt1.
+     * Get the game's token at pt1.
      * @param: None.
      * @return: None.
      */
     public function getFromPt1(array $board) {
-        return $board[$this->pt1["y"]][$this->pt1["x"]];
+        return $board[$this->pt1["y"]][$this->pt1["x"]]->getToken();
     }
 
     /*
-     * Get the game's color at pt2.
+     * Get the game's token at pt2.
      * @param: None.
      * @return: None.
      */
     public function getFromPt2(array $board) {
-        return $board[$this->pt2["y"]][$this->pt2["x"]];
+        return $board[$this->pt2["y"]][$this->pt2["x"]]->getToken();
     }
 
     function checkBelowPt2(array $board) {
         return $this->pt2["y"] + 1 >= sizeOf($board) ||
-            $board[$this->pt2["y"] + 1][$this->pt2["x"]].getToken() !== ".";
+            $board[$this->pt2["y"] + 1][$this->pt2["x"]]->getToken() != ".";
     }
 
     function checkBelowPt1(array $board) {
         return $this->pt1["y"] + 1 >= sizeOf($board) ||
-            $board[$this->pt1["y"] + 1][$this->pt1["x"]].getToken() !== ".";
+            $board[$this->pt1["y"] + 1][$this->pt1["x"]]->getToken() != ".";
     }
 
     function checkBelowBoth(array $board) {

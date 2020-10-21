@@ -1,4 +1,9 @@
 <?php
+// Nichole Maldonado
+// Extra Credit - Record.php
+// Oct 20, 2020
+// Dr. Cheon, CS3360
+
 require_once __DIR__."/Precedence.php";
 
 /*

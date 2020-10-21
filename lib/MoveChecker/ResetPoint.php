@@ -1,12 +1,12 @@
 <?php
 // Nichole Maldonado
-// Lab 1 - Record
-// September 18, 2020
+// Extra Credit - ResetPoint.php
+// Oct 20, 2020
 // Dr. Cheon, CS3360
-// ResetPoint used to eliminate code duplication among the two derived classes
-// LeftDiagonalStrategy and RightDiagonalStrategy. The parent, refers to
-// HorizontalStrategy.php.
 
+/*
+ * A mechanism to make the two points border the focal point.
+ */
 trait ResetPoint{
 
     /*

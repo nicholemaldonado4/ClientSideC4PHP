@@ -1,20 +1,47 @@
 <?php
-require_once dirname(__DIR__)."/Result/Result.php";
+// Nichole Maldonado
+// Extra Credit - ResponseParser.dart
+// Oct 20, 2020
+// Dr. Cheon, CS3360
+
 require_once dirname(__DIR__)."/Result/Info.php";
 require_once dirname(__DIR__)."/Result/Play.php";
+require_once dirname(__DIR__)."/Result/Result.php";
 
+/*
+ * A parser that calls php page, parses response, and returns encapsulated data.
+ * Calls a total of 3 pages: info/index.php, new/index.php, and play/index.php.
+ * info/index.php contains general information about the game including the
+ * board width, height, and strategies for the computer. new/index.php and
+ * play/index.php require a response field. If the response is false, then the
+ * reason for the page failure should be included in the json data.
+ * new/index.php contains the pid of the game. play/index.php contains the
+ * move of the user and move of the computer, if the player's move was not
+ * a winning move. Each move consists of a slot, whether the move was a
+ * winning move, drawing move, and the rows if won.
+ */
 class ResponseParser {
+    /*
+     * Retrieves Info from the info/index.php page.
+     * Requests the page at path and passes in verifications to check the
+     * json response. Verifies the width, height, and strategies.
+     * @param: The path for info/index.php
+     * @return: Result with game Info if true. Otherwise returns
+     *          a Result with a specific error message.
+     */
     function getInfo($path) {
         return $this->getPageInfo($path, function($response){
             if (!property_exists($response, "width") || !is_int($response->width)) {
-                return Result::error("Invalid response. Game missing width or width is not an integer");
+                return Result::error("Invalid response. Game missing width or was not an integer");
             }
             if (!property_exists($response, "height") || !is_int($response->height)) {
-                return Result::error('Invalid response. Game missing height or height is not an integer');
+                return Result::error('Invalid response. Game missing height or was not an integer');
             }
             if (!property_exists($response, "strategies") || !is_array($response->strategies)) {
                 return Result::error('Invalid response. Game missing strategies');
             }
+
+            // Make sure strategies are all strings.
             foreach ($response->strategies as $strategy) {
                 if (!is_string($strategy)) {
                     return Result::error("Invalid response. Strategies can only be strings.");
@@ -36,6 +63,12 @@ class ResponseParser {
         });
     }
 
+    /*
+     * Retrieves the pid from the new/index.php.
+     * @param: The path for the requested page.
+     * @return: The Result error returned if pid not included.
+     *          Otherwise, Result with the pid is returned.
+     */
     public function getNew($path) {
         return $this->getPageInfo($path, function($response) {
             if (!property_exists($response, "pid") || !is_string($response->pid)) {
@@ -45,6 +78,13 @@ class ResponseParser {
         }, true);
     }
 
+    /*
+     * Verifies that the json response contains a response field.
+     * @param: The json data.
+     * @return: Result with error returned if the response field
+     *          does not exist or the response is false. Otherwise
+     *          null is returned.
+     */
     private function evaluateJsonDecode($response) {
         if (!property_exists($response, "response")) {
             return Result::error("No response specified");
@@ -54,13 +94,21 @@ class ResponseParser {
         }
         if (!$response->response) {
             if (!property_exists($response, "reason") || !is_string($response->reason)) {
-                return Result::error("False response found, but a reason was not specified or was not a string.");
+                return Result::error("False response found, but a reason was not specified or was not a string");
             }
             return Result::error($response->reason);
         }
         return null;
     }
 
+    /*
+     * Verifies that the json decodedResponse for is a valid move request.
+     * @param: The width to ensure that the slot in the decodedResponse
+     *         is less than the width. The colHeights to ensure that a piece
+     *         can be still be added to the column.
+     * @return: Result error if response does not fit the expected format.
+     *          Otherwise, a Result with Play is returned.
+     */
     private function checkMove($decodedResponse, $width, $colHeights) {
         /// Check slot in range and can fit in board.
         if (!property_exists($decodedResponse, "slot")) {
@@ -87,6 +135,8 @@ class ResponseParser {
                 !is_array($decodedResponse->row)) {
             return Result::error('Either the row does not exist or was not a list');
         }
+
+        // Make sure row only consists of integers.
         $rowSize = 0;
         foreach ($decodedResponse->row as $value) {
             if (!is_int($value)) {
@@ -109,6 +159,13 @@ class ResponseParser {
         return null;
     }
 
+    /*
+     * Creates a Play from the json response.
+     * @param: The $path of the requested page. The $width and $colHeights
+     *         to ensure that the slots provided are correct.
+     * @return: Result with Play for a valid response. Otherwise
+     *          a Result error is returned.
+     */
     function getPlay($path, $width, array $colHeights) {
         return $this->getPageInfo($path, function($response) use ($width, $colHeights) {
             /// Verify user move.
@@ -141,7 +198,15 @@ class ResponseParser {
         });
     }
 
-    private function getPageInfo($path, Callable $responseChecker, $checkResponse = false) {
+    /*
+     * Calls the paths and returns the parsed information from the page.
+     * @param: parseResponse which will perform checks on the response
+     *         to ensure that it is valid. If checkResponse is true,
+     *         checks that the response part of the JSON is valid.
+     * @return: A Result with the data filled. If checks fail
+     *          or unable to call the path, a Result error is returned.
+     */
+    private function getPageInfo($path, Callable $parseResponse, $checkResponse = false) {
         $pageInfo = file_get_contents($path);
         if ($pageInfo === false) {
             return Result::error("Unable to access page contents");
@@ -153,12 +218,12 @@ class ResponseParser {
         if (!is_object($response)) {
             return Result::error("Invalid json data");
         }
-        if ($checkResponse === true) {
+        if ($checkResponse == true) {
             $jsonDecodedResponse = $this->evaluateJsonDecode($response);
             if ($jsonDecodedResponse !== null) {
                 return $jsonDecodedResponse;
             }
         }
-        return $responseChecker($response);
+        return $parseResponse($response);
     }
 }
