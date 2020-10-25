@@ -5,7 +5,7 @@
 // Oct 20, 2020
 // Dr. Cheon, CS3360
 
-require_once dirname(__DIR__)."/lib/Controller/Controller.php";
+require_once dirname(__DIR__) . "/lib/controller/Controller.php";
 
 // Runs the main client side connect 4 program.
 $controller = new Controller();
